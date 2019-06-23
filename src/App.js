@@ -58,10 +58,10 @@ class App extends React.Component {
     const { news } = this.state;
     return (
       <div className="news-list">
-        <button className="news-list__sort-button" onClick={this.sortNews}>
+        <button className="news-list__sort-button button" onClick={this.sortNews}>
           Сортировать по названию
         </button>
-        {news.map(this.eachTask).slice(0, this.state.amount)}
+        {news.map(this.eachTask).slice(0, this.state.amountNews)}
       </div>
     );
   }
@@ -71,7 +71,7 @@ class App extends React.Component {
       return this.normRender();
     } else {
       return (
-        <div className="read-news"> Новых новостей нет, ты все прочел! </div>
+        <div className="read-news"> Новых новостей нет. </div>
       );
     }
   }

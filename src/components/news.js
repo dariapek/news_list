@@ -6,9 +6,11 @@ class News extends React.Component {
   };
   render() {
     return (<div className="news">
-      <span className="news__title">{this.props.title}</span>
-      <p className="news__desc">{this.props.desc}</p>
-      <button className="news__read-button" onClick={this.deleteNews}>Прочитал</button>
+        <div className="news__inner">
+          <p className="news__title">{this.props.title}</p>
+          <p className="news__desc">{this.props.desc}</p>
+        </div>
+        <button className="button" onClick={this.deleteNews}>Прочитал</button>
     </div>);
   };
 }
