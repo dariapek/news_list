@@ -1,5 +1,6 @@
 import React from "react";
 import News from "./components/news";
+import Search from "./components/search";
 
 class App extends React.Component {
   constructor(props) {
@@ -23,22 +24,33 @@ class App extends React.Component {
   deleteBlock = i => {
     var arr = this.state.news;
     arr.splice(i, 1);
-    this.setState({ tasks: arr });
+    this.setState({ news: arr });
   };
 
-  sortNews = () => {
+  filterNews = (evt) => {
+    const value = evt.target.value.toLowerCase();
     var arr = this.state.news;
-    arr.sort(function(a, b) {
-      if (a.title > b.title) {
-        return 1;
-      }
-      if (a.title < b.title) {
-        return -1;
-      }
-      return 0;
-    });
-    this.setState({ tasks: arr });
-  };
+    var filterArr = [];
+
+    if (value.length === 0) {
+      this.componentDidMount();
+    } else {
+      filterArr = arr.filter(function(elem) {
+        return elem.title.toLowerCase().includes(value);
+      });
+
+      filterArr.sort(function(a, b) {
+        if (a.title > b.title) {
+          return 1;
+        }
+        if (a.title < b.title) {
+          return -1;
+        }
+        return 0;
+      });
+    this.setState({news: filterArr});
+    }
+  }
 
   eachTask = (item, i) => {
     return (
@@ -47,8 +59,7 @@ class App extends React.Component {
         index={i}
         title={item.title}
         desc={item.body}
-        deleteBlock={this.deleteBlock}
-      >
+        deleteBlock={this.deleteBlock}>
         {item}
       </News>
     );
@@ -58,9 +69,7 @@ class App extends React.Component {
     const { news } = this.state;
     return (
       <div className="news-list">
-        <button className="news-list__sort-button button" onClick={this.sortNews}>
-          Сортировать по названию
-        </button>
+        <Search filterNewsMethod={this.filterNews}></Search>
         {news.map(this.eachTask).slice(0, this.state.amountNews)}
       </div>
     );
@@ -71,7 +80,7 @@ class App extends React.Component {
       return this.normRender();
     } else {
       return (
-        <div className="read-news"> Новых новостей нет. </div>
+        <div className="read-news"> Новых новостей нет.</div>
       );
     }
   }
