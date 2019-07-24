@@ -6,19 +6,29 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      news: [],
-      amountNews: 10
+      error: null,
+      isLoaded: false,
+      news: []
     };
   }
 
   componentDidMount = () => {
     fetch("https://jsonplaceholder.typicode.com/posts")
       .then(res => res.json())
-      .then(result => {
-        this.setState({
-          news: result
-        });
-      });
+      .then(
+        result => {
+          this.setState({
+            isLoaded: true,
+            news: result
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      );
   };
 
   deleteBlock = i => {
@@ -66,22 +76,35 @@ class App extends React.Component {
   };
 
   normRender() {
-    const { news } = this.state;
+    const amountNews = 10;
     return (
       <div className="news-list">
         <Search filterNewsMethod={this.filterNews}></Search>
-        {news.map(this.eachTask).slice(0, this.state.amountNews)}
+        {this.state.news.map(this.eachTask).slice(0, amountNews)}
       </div>
     );
   }
 
+  newsNotFound() {
+    return (<div className="news-list">
+              <Search filterNewsMethod={this.filterNews}></Search>
+              <span className="no-news">Новостей нет. :(</span>
+    </div>);
+  }
+
+  loading() {
+    return (<div className="read-news"> Идет загрузка..</div>);
+  }
+
   render() {
-    if (this.state.news.length) {
-      return this.normRender();
+    if(this.state.isLoaded) {
+      if (this.state.news.length) {
+        return this.normRender();
+      } else {
+        return this.newsNotFound();
+      }
     } else {
-      return (
-        <div className="read-news"> Новых новостей нет.</div>
-      );
+      return this.loading();
     }
   }
 }
